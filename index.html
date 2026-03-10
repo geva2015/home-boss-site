@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Boss - The Logic Protocol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: #fdfeff;
+        }
+
+        /* רקע דינמי משופר - בתים וטלפונים עפים */
+        .floating-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+            background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.05), transparent),
+                        radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.05), transparent);
+        }
+
+        .floating-icon {
+            position: absolute;
+            opacity: 0.12;
+            animation: fly-up 30s infinite linear;
+            user-select: none;
+            filter: drop-shadow(0 0 5px rgba(0,0,0,0.1));
+        }
+
+        @keyframes fly-up {
+            0% { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.15; }
+            90% { opacity: 0.15; }
+            100% { transform: translateY(-20vh) translateX(20px) rotate(360deg); opacity: 0; }
+        }
+
+        /* אפקטים צבעוניים */
+        .core-glow {
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.5), 0 0 10px rgba(6, 182, 212, 0.3);
+        }
+
+        .neon-border-vibrant {
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            background: white;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .neon-border-vibrant:hover {
+            border-color: #8b5cf6;
+            box-shadow: 0 15px 30px -10px rgba(139, 92, 246, 0.2), 0 0 15px rgba(6, 182, 212, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #1e293b, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* עיצוב הטלפון (Mockup) */
+        .phone-container {
+            position: relative;
+            width: 320px;
+            height: 640px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.3), 0 0 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .phone-inner {
+            background: #fff;
+            width: 100%;
+            height: 100%;
+            border-radius: 32px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* טולטיפ */
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 240px;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            border-radius: 12px;
+            padding: 12px;
+            position: absolute;
+            z-index: 50;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-slate-900 overflow-x-hidden">
+
+    <!-- רקע עף -->
+    <div class="floating-bg" id="bg-layer"></div>
+
+    <!-- Header / Nav -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-gradient-to-tr from-purple-600 to-cyan-500 rounded-xl flex items-center justify-center core-glow">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="text-xl font-bold text-blue-900 block leading-none tracking-tight">HOME BOSS</span>
+                    <span class="text-[9px] text-purple-600 font-bold tracking-[0.2em] uppercase">The Logic Protocol</span>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center gap-10">
+                <a href="#features" class="text-slate-600 hover:text-purple-600 transition-colors font-semibold text-sm">פיצ'רים</a>
+                <a href="#story" class="text-slate-600 hover:text-purple-600 transition-colors font-semibold text-sm">הסיפור</a>
+                <a href="#faq" class="text-slate-600 hover:text-purple-600 transition-colors font-semibold text-sm">שאלות</a>
+                <button onclick="window.open('https://home-boss-from-geva.lovable.app', '_blank')" class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white px-7 py-2.5 rounded-full font-bold hover:shadow-lg hover:shadow-blue-200 transition-all">
+                    לאתר
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-48 pb-24 px-6 max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-2 gap-20 items-center">
+            <div class="text-right">
+                <h1 class="text-6xl lg:text-8xl font-black leading-[1.05] mb-8 gradient-text">
+                    הבוס החדש של <br>
+                    הבית שלכם.
+                </h1>
+                <p class="text-xl text-slate-600 mb-12 max-w-xl leading-relaxed">
+                    נמאס לכם לריב על מי מוציא את הזבל? פרוטוקול <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-cyan-500 font-black">CORE</span> מעביר את ניהול הבית מרגשות ללוגיקה חכמה.
+                </p>
+                <div class="flex flex-wrap gap-5">
+                    <button onclick="window.open('https://home-boss-from-geva.lovable.app', '_blank')" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-12 py-5 rounded-3xl text-xl font-black shadow-2xl shadow-purple-200 hover:scale-[1.03] active:scale-95 transition-all">
+                        לאתר
+                    </button>
+                </div>
+            </div>
+
+            <!-- Phone Interactive Mockup -->
+            <div class="flex justify-center items-center relative">
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-purple-300/20 blur-[80px] rounded-full"></div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-cyan-300/20 blur-[80px] rounded-full"></div>
+                
+                <div class="phone-container">
+                    <div class="phone-inner">
+                        <div class="p-6 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                            <span class="font-black text-blue-900 text-sm">Home Boss App</span>
+                            <div class="flex gap-1.5">
+                                <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                <div class="w-2 h-2 bg-slate-200 rounded-full"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex border-b text-sm font-black">
+                            <button onclick="setTab('tasks')" id="t-tasks" class="flex-1 py-4 border-b-2 border-purple-600 text-purple-600 transition-all">משימות</button>
+                            <button onclick="setTab('feed')" id="t-feed" class="flex-1 py-4 border-b-2 border-transparent text-slate-400 transition-all">תגובות חיות</button>
+                        </div>
+
+                        <div id="phone-content" class="flex-1 overflow-y-auto p-5 space-y-4 bg-white">
+                            <!-- JS populated -->
+                        </div>
+
+                        <div class="p-5 bg-slate-50 border-t flex gap-3">
+                            <input type="text" id="phone-input" placeholder="כתבו משהו..." class="flex-1 text-xs border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-purple-400 bg-white">
+                            <button onclick="addToPhone()" class="bg-gradient-to-r from-purple-600 to-cyan-500 text-white p-3 rounded-xl shadow-lg shadow-purple-100">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Story Section -->
+    <section id="story" class="py-32 bg-gradient-to-b from-purple-50/50 to-white px-6 border-y border-purple-100/50 scroll-mt-24">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-block px-4 py-1.5 bg-purple-100/50 text-purple-700 rounded-full text-xs font-black tracking-widest uppercase mb-8">החזון שלנו</div>
+            <h2 class="text-4xl lg:text-5xl font-black text-blue-950 mb-10">בית מסודר ושיתוף פעולה במשפחה</h2>
+            <div class="bg-white p-10 lg:p-14 rounded-[40px] shadow-2xl shadow-purple-100/50 border border-purple-50">
+                <p class="text-xl lg:text-2xl text-slate-700 leading-relaxed font-medium">
+                    home boss נוצר בכיוון שהרבה משפחות אינן מצליחות לנהל משימות ביחד כמשפחה. <br><br>
+                    המטרה שלנו היית ליצור כלי שיוכל לגרום למשפחה לנהל משימות כמשפחה בלי ריבים ובלי שמישהו ישכח מה הוא צריך לעשות... <br><br>
+                    <span class="text-purple-600 font-bold">אחרי בדיקות על כמה משפחות הבנו שזה משפיע לגמרי מבחינת ריבים וסדר המשפחה.</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-32 px-6 max-w-7xl mx-auto scroll-mt-24">
+        <div class="text-center mb-24">
+            <h2 class="text-4xl lg:text-5xl font-black text-blue-950 mb-6 tooltip">
+                הלוגיקה שמאחורי האפליקציה
+                <span class="tooltiptext text-right font-medium">פרוטוקול CORE: <br> <b>C</b>ommunication <br> <b>O</b>rder <br> <b>R</b>esponsibility <br> <b>E</b>fficiency</span>
+            </h2>
+            <p class="text-slate-500 font-semibold text-lg">ארבעת הדברים שחשובים לנו</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
+            <!-- Feature 1 -->
+            <div class="p-10 rounded-[35px] neon-border-vibrant group">
+                <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                </div>
+                <h3 class="text-2xl font-black text-blue-900 mb-4">ניהול חכם</h3>
+                <p class="text-slate-500 leading-relaxed font-medium">המערכת יודעת לתעדף משימות לפי דחיפות וזמינות בני הבית באופן אוטומטי.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="p-10 rounded-[35px] neon-border-vibrant group">
+                <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-purple-600 group-hover:text-white transition-all">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                </div>
+                <h3 class="text-2xl font-black text-blue-900 mb-4">סנכרון מלא</h3>
+                <p class="text-slate-500 leading-relaxed font-medium">אין יותר "לא ידעתי". כל עדכון מופיע לכולם בסמארטפון, בטאבלט ובמחשב.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="p-10 rounded-[35px] neon-border-vibrant group">
+                <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-black text-blue-900 mb-4">פרטיות</h3>
+                <p class="text-slate-500 leading-relaxed font-medium">המידע המשפחתי שלכם מוצפן. אנחנו לא מוכרים דאטה, אנחנו מוכרים שקט נפשי.</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="p-10 rounded-[35px] neon-border-vibrant group">
+                <div class="w-16 h-16 bg-cyan-50 text-cyan-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-cyan-600 group-hover:text-white transition-all">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                </div>
+                <h3 class="text-2xl font-black text-blue-900 mb-4">גישה קלה</h3>
+                <p class="text-slate-500 leading-relaxed font-medium">ללא התקנה. פשוט נכנסים מהנייד או המחשב ומתחילים לעבוד. פשוט וקל.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-32 bg-slate-50 px-6 scroll-mt-24">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-4xl font-black text-center mb-16 text-blue-950">שאלות נפוצות</h2>
+            <div class="space-y-6">
+                <details class="group bg-white rounded-[25px] p-8 shadow-sm cursor-pointer border border-transparent hover:border-purple-200 transition-all">
+                    <summary class="list-none flex justify-between items-center font-bold text-xl text-blue-900">
+                        האם המערכת מתאימה גם למשפחות עם ילדים קטנים?
+                        <span class="group-open:rotate-180 transition-transform text-purple-600">▼</span>
+                    </summary>
+                    <p class="mt-6 text-slate-600 leading-relaxed font-medium">בהחלט. Home Boss עוצבה להיות ויזואלית ופשוטה. הילדים יכולים לקבל "נקודות לוגיקה" על ביצוע משימות ולהרגיש חלק מהצוות.</p>
+                </details>
+
+                <details class="group bg-white rounded-[25px] p-8 shadow-sm cursor-pointer border border-transparent hover:border-purple-200 transition-all">
+                    <summary class="list-none flex justify-between items-center font-bold text-xl text-blue-900">
+                        כמה זה עולה?
+                        <span class="group-open:rotate-180 transition-transform text-purple-600">▼</span>
+                    </summary>
+                    <p class="mt-6 text-slate-600 leading-relaxed font-bold text-purple-600">הגרסה היא חינמית לגמרי ואין גרסה בתשלום.</p>
+                </details>
+
+                <details class="group bg-white rounded-[25px] p-8 shadow-sm cursor-pointer border border-transparent hover:border-purple-200 transition-all">
+                    <summary class="list-none flex justify-between items-center font-bold text-xl text-blue-900">
+                        האם המידע שלי בטוח?
+                        <span class="group-open:rotate-180 transition-transform text-purple-600">▼</span>
+                    </summary>
+                    <p class="mt-6 text-slate-600 leading-relaxed font-medium">המידע המשפחתי מוצפן ונשמר בשרתים מאובטחים. אנחנו לא משתפים את המידע שלכם עם אף גורם חיצוני.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-950 text-white py-16 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-cyan-500 rounded-lg flex items-center justify-center font-black">HB</div>
+                <div>
+                    <span class="text-xl font-black block leading-none">HOME BOSS</span>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">The Logic Protocol</span>
+                </div>
+            </div>
+            
+            <div class="text-slate-400 text-sm font-medium">
+                © 2026 Home Boss. כל הזכויות שמורות לפרוטוקול CORE.
+            </div>
+
+            <div class="flex gap-8">
+                <a href="#" class="text-slate-400 hover:text-cyan-400 transition-colors">תנאי שימוש</a>
+                <a href="#" class="text-slate-400 hover:text-cyan-400 transition-colors">פרטיות</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // יצירת רקע צף משופר - בתים וטלפונים
+        const bgLayer = document.getElementById('bg-layer');
+        const symbols = ['🏠', '📱', '🏠', '📱', '⚡', '✓']; // יותר בתים וטלפונים
+        
+        for(let i=0; i<30; i++) {
+            const icon = document.createElement('div');
+            icon.className = 'floating-icon';
+            icon.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+            icon.style.left = Math.random() * 100 + 'vw';
+            icon.style.animationDuration = (20 + Math.random() * 25) + 's';
+            icon.style.animationDelay = (Math.random() * 15) + 's';
+            icon.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            bgLayer.appendChild(icon);
+        }
+
+        // ניהול תוכן הטלפון
+        let activeTab = 'tasks';
+        const tasks = [
+            { id: 1, text: "לקנות ירקות לשבוע", user: "אמא" },
+            { id: 2, text: "להזמין תור לשיננית", user: "אבא" },
+            { id: 3, text: "לשטוף את המכונית", user: "אורן" }
+        ];
+        const feed = [
+            { id: 1, user: "מיכל", text: "זה פשוט שינה לנו את החיים, ממליצה בחום!" },
+            { id: 2, user: "דוד", text: "סוף סוף אני יודע מה המטלות שלי בלי שיצעקו עליי." }
+        ];
+
+        function setTab(tab) {
+            activeTab = tab;
+            document.getElementById('t-tasks').className = tab === 'tasks' ? 'flex-1 py-4 border-b-2 border-purple-600 text-purple-600 transition-all' : 'flex-1 py-4 border-b-2 border-transparent text-slate-400 transition-all';
+            document.getElementById('t-feed').className = tab === 'feed' ? 'flex-1 py-4 border-b-2 border-purple-600 text-purple-600 transition-all' : 'flex-1 py-4 border-b-2 border-transparent text-slate-400 transition-all';
+            renderPhone();
+        }
+
+        function renderPhone() {
+            const container = document.getElementById('phone-content');
+            container.innerHTML = '';
+            const data = activeTab === 'tasks' ? tasks : feed;
+
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'bg-slate-50 p-4 rounded-2xl border border-slate-100 fade-in shadow-sm';
+                if(activeTab === 'tasks') {
+                    div.innerHTML = `
+                        <div class="flex items-center gap-4">
+                            <div class="w-5 h-5 border-2 border-purple-300 rounded-lg bg-white"></div>
+                            <div>
+                                <p class="text-xs font-black text-blue-900">${item.text}</p>
+                                <p class="text-[10px] text-slate-400 font-bold">אחריות: ${item.user}</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    div.innerHTML = `
+                        <p class="text-[11px] font-black text-purple-600 mb-1">${item.user}</p>
+                        <p class="text-xs text-slate-700 italic font-medium">"${item.text}"</p>
+                    `;
+                }
+                container.appendChild(div);
+            });
+        }
+
+        function addToPhone() {
+            const input = document.getElementById('phone-input');
+            if(!input.value.trim()) return;
+
+            if(activeTab === 'tasks') {
+                tasks.unshift({ id: Date.now(), text: input.value, user: "אתה" });
+            } else {
+                feed.unshift({ id: Date.now(), user: "אורח", text: input.value });
+            }
+            input.value = '';
+            renderPhone();
+        }
+
+        // התחלה
+        renderPhone();
+    </script>
+</body>
+</html>
